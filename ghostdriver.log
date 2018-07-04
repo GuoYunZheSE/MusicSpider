@@ -1,0 +1,76 @@
+[INFO  - 2018-07-03T10:51:05.396Z] GhostDriver - Main - running on port 57246
+[INFO  - 2018-07-03T10:51:09.722Z] Session [feafe630-7eae-11e8-af79-1790d661e7df] - page.settings - {"XSSAuditingEnabled":false,"javascriptCanCloseWindows":true,"javascriptCanOpenWindows":true,"javascriptEnabled":true,"loadImages":true,"localToRemoteUrlAccessEnabled":false,"userAgent":"Mozilla/5.0 (Windows NT 6.2; WOW64) AppleWebKit/538.1 (KHTML, like Gecko) PhantomJS/2.1.1 Safari/538.1","webSecurityEnabled":true}
+[INFO  - 2018-07-03T10:51:09.722Z] Session [feafe630-7eae-11e8-af79-1790d661e7df] - page.customHeaders:  - {}
+[INFO  - 2018-07-03T10:51:09.723Z] Session [feafe630-7eae-11e8-af79-1790d661e7df] - Session.negotiatedCapabilities - {"browserName":"phantomjs","version":"2.1.1","driverName":"ghostdriver","driverVersion":"1.2.0","platform":"windows-8.1-32bit","javascriptEnabled":true,"takesScreenshot":true,"handlesAlerts":false,"databaseEnabled":false,"locationContextEnabled":false,"applicationCacheEnabled":false,"browserConnectionEnabled":false,"cssSelectorsEnabled":true,"webStorageEnabled":false,"rotatable":false,"acceptSslCerts":false,"nativeEvents":true,"proxy":{"proxyType":"direct"}}
+[INFO  - 2018-07-03T10:51:09.723Z] SessionManagerReqHand - _postNewSessionCommand - New Session Created: feafe630-7eae-11e8-af79-1790d661e7df
+[ERROR - 2018-07-03T10:53:01.363Z] Session [feafe630-7eae-11e8-af79-1790d661e7df] - page.onError - msg: TypeError: undefined is not an object (evaluating 'Xf7Y.addCallback')
+
+  phantomjs://platform/console++.js:263 in error
+[ERROR - 2018-07-03T10:53:01.364Z] Session [feafe630-7eae-11e8-af79-1790d661e7df] - page.onError - stack:
+  (anonymous function) (https://s3.music.126.net/web/s/core.js?639d5960ca551785431254b4ccdd98a1:133)
+  forEach (:0)
+  bd0x (https://s3.music.126.net/web/s/core.js?639d5960ca551785431254b4ccdd98a1:17)
+  (anonymous function) (https://s3.music.126.net/web/s/core.js?639d5960ca551785431254b4ccdd98a1:133)
+  (anonymous function) (https://s3.music.126.net/web/s/core.js?639d5960ca551785431254b4ccdd98a1:1)
+  TJ6D (https://s3.music.126.net/web/s/core.js?639d5960ca551785431254b4ccdd98a1:25)
+  (anonymous function) (https://s3.music.126.net/web/s/core.js?639d5960ca551785431254b4ccdd98a1:1)
+
+  phantomjs://platform/console++.js:263 in error
+[INFO  - 2018-07-03T10:56:05.365Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2018-07-03T11:01:05.369Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2018-07-03T11:06:05.368Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2018-07-03T11:11:05.369Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2018-07-03T11:16:05.368Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[ERROR - 2018-07-03T11:20:00.832Z] Session [feafe630-7eae-11e8-af79-1790d661e7df] - page.onError - msg: TypeError: undefined is not an object (evaluating 'Xf7Y.addCallback')
+
+  phantomjs://platform/console++.js:263 in error
+[ERROR - 2018-07-03T11:20:00.832Z] Session [feafe630-7eae-11e8-af79-1790d661e7df] - page.onError - stack:
+  (anonymous function) (https://s3.music.126.net/web/s/core.js?639d5960ca551785431254b4ccdd98a1:133)
+  forEach (:0)
+  bd0x (https://s3.music.126.net/web/s/core.js?639d5960ca551785431254b4ccdd98a1:17)
+  (anonymous function) (https://s3.music.126.net/web/s/core.js?639d5960ca551785431254b4ccdd98a1:133)
+  (anonymous function) (https://s3.music.126.net/web/s/core.js?639d5960ca551785431254b4ccdd98a1:1)
+  TJ6D (https://s3.music.126.net/web/s/core.js?639d5960ca551785431254b4ccdd98a1:25)
+  (anonymous function) (https://s3.music.126.net/web/s/core.js?639d5960ca551785431254b4ccdd98a1:1)
+
+  phantomjs://platform/console++.js:263 in error
+[INFO  - 2018-07-03T11:21:05.369Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[ERROR - 2018-07-03T11:25:39.769Z] Session [feafe630-7eae-11e8-af79-1790d661e7df] - page.onError - msg: TypeError: undefined is not an object (evaluating 'Xf7Y.addCallback')
+
+  phantomjs://platform/console++.js:263 in error
+[ERROR - 2018-07-03T11:25:39.769Z] Session [feafe630-7eae-11e8-af79-1790d661e7df] - page.onError - stack:
+  (anonymous function) (https://s3.music.126.net/web/s/core.js?639d5960ca551785431254b4ccdd98a1:133)
+  forEach (:0)
+  bd0x (https://s3.music.126.net/web/s/core.js?639d5960ca551785431254b4ccdd98a1:17)
+  (anonymous function) (https://s3.music.126.net/web/s/core.js?639d5960ca551785431254b4ccdd98a1:133)
+  (anonymous function) (https://s3.music.126.net/web/s/core.js?639d5960ca551785431254b4ccdd98a1:1)
+  TJ6D (https://s3.music.126.net/web/s/core.js?639d5960ca551785431254b4ccdd98a1:25)
+  (anonymous function) (https://s3.music.126.net/web/s/core.js?639d5960ca551785431254b4ccdd98a1:1)
+
+  phantomjs://platform/console++.js:263 in error
+[INFO  - 2018-07-03T11:26:05.368Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2018-07-03T11:31:05.369Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2018-07-03T11:36:05.368Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2018-07-03T11:41:05.369Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2018-07-03T11:46:05.369Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2018-07-03T11:51:05.368Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2018-07-03T11:56:05.369Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2018-07-03T12:01:05.369Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2018-07-03T12:06:05.377Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2018-07-03T12:11:05.377Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2018-07-03T12:16:05.377Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2018-07-03T12:21:05.377Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2018-07-03T12:26:05.377Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2018-07-03T12:31:05.377Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2018-07-03T12:36:05.377Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2018-07-03T12:41:05.377Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2018-07-03T12:46:05.378Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2018-07-03T12:51:05.381Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2018-07-03T12:56:05.381Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2018-07-03T13:01:05.381Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2018-07-03T13:06:05.381Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2018-07-03T13:11:05.381Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2018-07-03T13:16:05.381Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2018-07-03T13:21:05.382Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2018-07-03T13:26:05.381Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
+[INFO  - 2018-07-03T13:31:05.384Z] SessionManagerReqHand - _cleanupWindowlessSessions - Asynchronous Sessions clean-up phase starting NOW
