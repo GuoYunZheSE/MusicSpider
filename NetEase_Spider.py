@@ -49,7 +49,7 @@ class Song:
     def __init__(self,name,s_id):
         self.name=name
         self.id=s_id
-        self.lyric_url = 'http://music.163.com/api/song/media?'.format(s_id)
+        self.lyric_url = 'http://music.163.com/api/song/media?id={}'.format(s_id)
         self.song_url = 'http://music.163.com/song/media/outer/url?id={}.mp3'.format(s_id)
 
 
@@ -73,7 +73,7 @@ class NetEaseSpider:
                    'Accept-Language':'zh-CN, zh;q=0.8',
                    'Pragma':'no - cache',
                    'Cache - Control': 'no - cache',
-                   'Accept': 'text / html, application / xhtml + xml, application / xml;q = 0.9, image / webp, image / apng, * / *;q = 0.8',
+                   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
                    'Content-Type':'application/x-www-form-urlencoded'
                    }
         # # Cookie Added
@@ -146,7 +146,7 @@ class NetEaseSpider:
                    'Accept-Language':'zh-CN, zh;q=0.8',
                    'Pragma':'no - cache',
                    'Cache - Control': 'no - cache',
-                   'Accept': 'text / html, application / xhtml + xml, application / xml;q = 0.9, image / webp, image / apng, * / *;q = 0.8',
+                   'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
                    'Content-Type':'application/x-www-form-urlencoded'
                    }
         response=requests.request('GET',url,stream=True,data=None,headers=None)
@@ -179,10 +179,13 @@ class NetEaseSpider:
 
     def download_song(self,album):
         for song in album.songs:
-            lyrics_html = self.download(song.lyric_url).decode('utf-8')
-            lyrics = re.split('":"|","', lyrics_html)[1]
-            lyrics = lyrics.strip('\'')
-            lyrics = lyrics.replace('\\n', '\n')
+            try:
+                lyrics_html = self.download(song.lyric_url).decode('utf-8')
+                lyrics = re.split('":"|","', lyrics_html)[1]
+                lyrics = lyrics.strip('\'')
+                lyrics = lyrics.replace('\\n', '\n')
+            except IndexError:
+                lyrics='暂无歌词'
             try:
                 os.mkdir(
                     'G:\\Spring_Semester_2018\\J2EE实训\\数据\\音乐数据库\\lyrics\\{ARTIST_NAME}'.format(
@@ -199,7 +202,7 @@ class NetEaseSpider:
 
             lyrics_file = open(
                 'G:\\Spring_Semester_2018\\J2EE实训\\数据\\音乐数据库\\lyrics\\{ARTIST_NAME}\\{ALBUM_NAME}\\{SONG_NAME}.lrc'.format(
-                    ARTIST_NAME=self.artist.name, ALBUM_NAME=album.name, SONG_NAME=song.name), 'w')
+                    ARTIST_NAME=self.artist.name, ALBUM_NAME=album.name, SONG_NAME=song.name), 'w',encoding='utf-8')
             lyrics_file.write(lyrics)
             lyrics_file.close()
             print('\tLyric File:{} Saved'.format(song.name))
