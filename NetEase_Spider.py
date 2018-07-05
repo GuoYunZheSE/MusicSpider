@@ -6,7 +6,28 @@ import progressbar
 import requests
 import os
 import time
+import json
 
+def check(name):
+    if '/' in name:
+        name.replace('/', '_')
+    if '\\' in name:
+        name.replace('\\', '_')
+    if ':' in name:
+        name.replace(':', '_')
+    if '?' in name:
+        name.replace('?', '_')
+    if '|' in name:
+        name.replace('|', '_')
+    if '<' in name:
+        name.replace('<', '_')
+    if '>' in name:
+        name.replace('>', '_')
+    if '\'' in name:
+        name.replace('\'', '_')
+    if '\"' in name:
+        name.replace('\"', '_')
+    return name
 
 class Artist:
     def __init__(self,artist_id,artist_name,img,info):
@@ -47,12 +68,12 @@ class Song:
 
 
 class NetEaseSpider:
-    def __init__(self,artist_id,para):
+    def __init__(self,para):
         self.para=para
         self.main_url='https://music.163.com/'
-        self.artist_url='https://music.163.com/artist/album?id={}&limit={}&offset={}'.format(artist_id,para['limit'],para['offset'])
-        self.artist_info='https://music.163.com/artist/desc?id={}'.format(artist_id)
-        self.artist_id=artist_id
+        self.artist_url='https://music.163.com/artist/album?id={}&limit={}&offset={}'.format(para['id'],para['limit'],para['offset'])
+        self.artist_info='https://music.163.com/artist/desc?id={}'.format(para['id'])
+        self.artist_id=para['id']
         # driver = webdriver.PhantomJS(executable_path='D:\\phantomjs-2.1.1-windows\\bin\\phantomjs.exe')
         #         # driver.implicitly_wait(1)
         # self.cookie=driver.get_cookies()
@@ -109,12 +130,12 @@ class NetEaseSpider:
             img=imgs[i]['src']
             a_id=int(a_ids[i]['href'].split('id=')[1])
             name=names[i]['title']
-            self.artist.albums.append(Album(name, a_id, img))
+            self.artist.albums.append(Album(check(name), a_id, img))
 
     def parse_album_html(self,album):
         self.get_bs(album.url)
         try:
-            release_date = self.bs.select('div div div div div div div div  p')[2].text.split('：')[1]
+            release_date = self.bs.select('div div div div div div div div  p')[1].text.split('：')[1]
         except IndexError:
             release_date='2018-1-1'
         album.set_release_date(release_date)
@@ -131,7 +152,7 @@ class NetEaseSpider:
         for song in songs:
             song_name=song.text
             song_id=int(song['href'].split('id=')[1])
-            album.add_song(Song(song_name,song_id))
+            album.add_song(Song(check(song_name),song_id))
 
     def download_file(self,url,file_path,method):
         print('\tDownload:', url)
@@ -163,6 +184,9 @@ class NetEaseSpider:
             print('File Not Exits!')
             file=open(file_path,method)
             file.close()
+        except FileNotFoundError:
+            print('File Not Found!')
+            pass
 
     def download_singer_img(self):
         print('Downloading:{}\'s Image'.format(self.artist.name))
@@ -211,9 +235,26 @@ class NetEaseSpider:
                         ARTIST_NAME=self.artist.name, ALBUM_NAME=album.name, SONG_NAME=song.name), 'w',
                     encoding='utf-8')
             except FileNotFoundError:
+                try:
+                    lyrics_file = open(
+                        'G:\\Spring_Semester_2018\\J2EE实训\\数据\\音乐数据库\\lyrics\\{ARTIST_NAME}\\{ALBUM_NAME}\\{SONG_NAME}.lrc'.format(
+                            ARTIST_NAME=self.artist.name, ALBUM_NAME=album.name, SONG_NAME='InvalidFileName'), 'w',
+                        encoding='utf-8')
+                except FileNotFoundError:
+                    os.mkdir(
+                        'G:\\Spring_Semester_2018\\J2EE实训\\数据\\音乐数据库\\lyrics\\{ARTIST_NAME}\\{ALBUM_NAME}\\'.format(
+                            ARTIST_NAME=self.artist.name, ALBUM_NAME='InvalidAlbumName'))
+                    lyrics_file = open(
+                        'G:\\Spring_Semester_2018\\J2EE实训\\数据\\音乐数据库\\lyrics\\{ARTIST_NAME}\\{ALBUM_NAME}\\{SONG_NAME}.lrc'.format(
+                            ARTIST_NAME=self.artist.name, ALBUM_NAME='InvalidAlbumName', SONG_NAME='InvalidFileName'), 'w',
+                        encoding='utf-8')
+            except OSError:
+                os.mkdir(
+                    'G:\\Spring_Semester_2018\\J2EE实训\\数据\\音乐数据库\\lyrics\\{ARTIST_NAME}\\{ALBUM_NAME}\\'.format(
+                        ARTIST_NAME=self.artist.name, ALBUM_NAME='InvalidAlbumName'))
                 lyrics_file = open(
                     'G:\\Spring_Semester_2018\\J2EE实训\\数据\\音乐数据库\\lyrics\\{ARTIST_NAME}\\{ALBUM_NAME}\\{SONG_NAME}.lrc'.format(
-                        ARTIST_NAME=self.artist.name, ALBUM_NAME=album.name, SONG_NAME='InvalidFileName'), 'w',
+                        ARTIST_NAME=self.artist.name, ALBUM_NAME='InvalidAlbumName', SONG_NAME='InvalidFileName'), 'w',
                     encoding='utf-8')
             lyrics_file.write(lyrics)
             lyrics_file.close()
@@ -276,7 +317,7 @@ class NetEaseSpider:
             REGION=self.para['region'],
             STYLE=self.para['style'],
             IMAGE='/image/album/{}/{}.jpg'.format(self.artist.name, album.name),
-            ARTIST_ID='(SELECT id from artist where name="{}")'.format(self.artist_id)
+            ARTIST_ID='(SELECT id from artist where name="{}")'.format(self.artist.name)
         )
         return Command
 
@@ -284,9 +325,9 @@ class NetEaseSpider:
         Command = "INSERT INTO song (name, artist_id, album_id, language, style, release_date, lyrics_path, image, play_count, file_path, region) " \
                   "VALUES ('{NAME}',{ARTIST_ID},{ALBUM_ID},'{LANGUAGE}',{STYLE},'{RELEASE_DATE}','{LYRICS_PATH}',NULL ,0,'{FILE_PATH}',{REGION});".format(
             NAME=song.name,
-            ARTIST_ID='(SELECT id from artist WHERE name="{}")'.format(self.artist_id),
+            ARTIST_ID='(SELECT id from artist WHERE id="{}")'.format(self.artist_id),
             ALBUM_ID='(SELECT id from album WHERE name="{}" and album.artist_id=(SELECT id from artist WHERE name="{}"))'.format(
-                album.name, self.artist_id),
+                album.name, self.artist.name),
             LANGUAGE=self.para['language'],
             STYLE=self.para['style'],
             RELEASE_DATE=album.release_date,
@@ -310,9 +351,15 @@ if __name__ == '__main__':
         'style':1,
         'language':'日语',
         'limit':50,
-        'offset':0
+        'offset':0,
+        'id':17477
     }
-    Spy = NetEaseSpider('17477',para=artist_para)
+    Spy = NetEaseSpider(para=artist_para)
+
+    filew = open('G:\\Spring_Semester_2018\\J2EE实训\\数据\\音乐数据库\\data\\{}.json'.format(artist_para['name']), 'w', encoding='utf-8')
+    json.dump(artist_para, filew)
+    filew.close()
+
 
     Spy.parse_artist_html()
     album_num=Spy.artist.albums.__len__()
@@ -323,14 +370,15 @@ if __name__ == '__main__':
 
 
     SQL_file.write(Spy.SQL_artist())
+    SQL_file.write('\n')
     Spy.download_singer_img()
     album_count=0
     for album in Spy.artist.albums:
         album_count+=1
         Spy.download_album_img(album)
+        Spy.parse_album_html(album)
         SQL_file.write(Spy.SQL_album(album))
         SQL_file.write('\n')
-        Spy.parse_album_html(album)
         print('Album:{}/{}'.format(album_count,album_num))
         for song in album.songs:
             SQL_file.write(Spy.SQL_song(album,song))
