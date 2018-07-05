@@ -15,7 +15,7 @@
   <component name="CoverageDataManager">
     <SUITE FILE_PATH="coverage/MusicSpider$Spider.coverage" NAME="Spider Coverage Results" MODIFIED="1530608845674" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/MusicSpider$GPA_SCUT.coverage" NAME="GPA_SCUT Coverage Results" MODIFIED="1529834533636" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/MusicSpider$NetEase_Spider.coverage" NAME="NetEase_Spider Coverage Results" MODIFIED="1530753837038" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/MusicSpider$NetEase_Spider.coverage" NAME="NetEase_Spider Coverage Results" MODIFIED="1530754426230" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
   <component name="FavoritesManager">
     <favorites_list name="MusicSpider" />
@@ -37,8 +37,8 @@
       <file leaf-file-name="NetEase_Spider.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/NetEase_Spider.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="682">
-              <caret line="205" selection-start-line="205" selection-end-line="205" />
+            <state relative-caret-position="250">
+              <caret line="296" lean-forward="true" selection-start-line="296" selection-end-line="296" />
               <folding>
                 <element signature="e#0#21#0" expanded="true" />
               </folding>
@@ -249,7 +249,14 @@
       <option name="project" value="LOCAL" />
       <updated>1530711417644</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Code problem">
+      <created>1530753889700</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1530753889700</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TodoView">
@@ -266,11 +273,11 @@
     <editor active="true" />
     <layout>
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32900432" />
-      <window_info anchor="bottom" id="Event Log" order="12" sideWeight="0.31503198" side_tool="true" visible="true" weight="0.21776815" />
+      <window_info anchor="bottom" id="Event Log" order="12" sideWeight="0.31556502" side_tool="true" visible="true" weight="0.5178765" />
       <window_info anchor="bottom" id="Database Changes" order="11" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="7" sideWeight="0.4978678" weight="0.32900432" />
+      <window_info anchor="bottom" id="Version Control" order="7" sideWeight="0.49733475" weight="0.32827735" />
       <window_info anchor="bottom" id="Python Console" order="8" sideWeight="0.49946696" weight="0.312026" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.684968" visible="true" weight="0.21776815" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.68443495" visible="true" weight="0.5178765" />
       <window_info anchor="bottom" id="Terminal" order="9" weight="0.32900432" />
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.495585" visible="true" weight="0.14765458" />
       <window_info anchor="bottom" id="Docker" order="10" show_stripe_button="false" />
@@ -297,7 +304,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Correct" />
-    <option name="LAST_COMMIT_MESSAGE" value="Correct" />
+    <MESSAGE value="Code problem" />
+    <option name="LAST_COMMIT_MESSAGE" value="Code problem" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -634,8 +642,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/NetEase_Spider.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="682">
-          <caret line="205" selection-start-line="205" selection-end-line="205" />
+        <state relative-caret-position="250">
+          <caret line="296" lean-forward="true" selection-start-line="296" selection-end-line="296" />
           <folding>
             <element signature="e#0#21#0" expanded="true" />
           </folding>

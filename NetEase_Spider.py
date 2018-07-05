@@ -289,7 +289,7 @@ if __name__ == '__main__':
     Spy = NetEaseSpider('17477',para=artist_para)
 
     Spy.parse_artist_html()
-    SQL_file = open('G:\\Spring_Semester_2018\\J2EE实训\\数据\\音乐数据库\\data\\insert_{}.sql'.format(Spy.artist.name), 'w')
+    SQL_file = open('G:\\Spring_Semester_2018\\J2EE实训\\数据\\音乐数据库\\data\\insert_{}.sql'.format(Spy.artist.name), 'w',encoding='utf-8')
     localtime = time.asctime(time.localtime(time.time()))
     SQL_file.write('# {}'.format(localtime))
     SQL_file.write('\n')
