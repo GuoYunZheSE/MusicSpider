@@ -113,7 +113,10 @@ class NetEaseSpider:
 
     def parse_album_html(self,album):
         self.get_bs(album.url)
-        release_date=self.bs.select('div div div div div div div div  p')[2].text.split('：')[1]
+        try:
+            release_date = self.bs.select('div div div div div div div div  p')[2].text.split('：')[1]
+        except IndexError:
+            release_date='2018-1-1'
         album.set_release_date(release_date)
 
         info=self.bs.select('div.f-brk p')
