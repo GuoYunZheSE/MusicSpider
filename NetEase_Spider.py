@@ -10,23 +10,23 @@ import json
 
 def check(name):
     if '/' in name:
-        name.replace('/', '_')
+        name=name.replace('/', '_')
     if '\\' in name:
-        name.replace('\\', '_')
+        name =name.replace('\\', '_')
     if ':' in name:
-        name.replace(':', '_')
+        name =name.replace(':', '_')
     if '?' in name:
-        name.replace('?', '_')
+        name =name.replace('?', '_')
     if '|' in name:
-        name.replace('|', '_')
+        name = name.replace('|', '_')
     if '<' in name:
-        name.replace('<', '_')
+        name =name.replace('<', '_')
     if '>' in name:
-        name.replace('>', '_')
+        name =name.replace('>', '_')
     if '\'' in name:
-        name.replace('\'', '_')
+        name =name.replace('\'', '_')
     if '\"' in name:
-        name.replace('\"', '_')
+        name =name.replace('\"', '_')
     return name
 
 class Artist:
@@ -144,13 +144,15 @@ class NetEaseSpider:
         album_info=''
         for i in range(0,info.__len__()):
             album_info+=info[i].text
-        if album_info.__len__()>=70:
-            album_info=album_info[0:70]
+        if album_info.__len__()>=340:
+            album_info=album_info[0:340]
         album.set_info(album_info)
 
         songs=self.bs.select('ul.f-hide li a')
         for song in songs:
             song_name=song.text
+            if song_name>=30:
+                song_name=song_name[0:30]
             song_id=int(song['href'].split('id=')[1])
             album.add_song(Song(check(song_name),song_id))
 
@@ -317,7 +319,7 @@ class NetEaseSpider:
             REGION=self.para['region'],
             STYLE=self.para['style'],
             IMAGE='/image/album/{}/{}.jpg'.format(self.artist.name, album.name),
-            ARTIST_ID='(SELECT id from artist where name="{}")'.format(self.artist.name)
+            ARTIST_ID="(SELECT id from artist where name='{}')".format(self.artist.name)
         )
         return Command
 
@@ -325,8 +327,8 @@ class NetEaseSpider:
         Command = "INSERT INTO song (name, artist_id, album_id, language, style, release_date, lyrics_path, image, play_count, file_path, region) " \
                   "VALUES ('{NAME}',{ARTIST_ID},{ALBUM_ID},'{LANGUAGE}',{STYLE},'{RELEASE_DATE}','{LYRICS_PATH}',NULL ,0,'{FILE_PATH}',{REGION});".format(
             NAME=song.name,
-            ARTIST_ID='(SELECT id from artist WHERE id="{}")'.format(self.artist_id),
-            ALBUM_ID='(SELECT id from album WHERE name="{}" and album.artist_id=(SELECT id from artist WHERE name="{}"))'.format(
+            ARTIST_ID="(SELECT id from artist WHERE name='{}')".format(self.artist.name),
+            ALBUM_ID="(SELECT id from album WHERE name='{}' and album.artist_id=(SELECT id from artist WHERE name='{}'))".format(
                 album.name, self.artist.name),
             LANGUAGE=self.para['language'],
             STYLE=self.para['style'],
