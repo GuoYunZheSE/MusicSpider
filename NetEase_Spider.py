@@ -1,19 +1,12 @@
 import urllib.request
-import io
-import gzip
 import re
-import itertools
 import urllib.parse
 import bs4
 import progressbar
-import tqdm
 import requests
 import os
 import time
-import sys
-import http.cookiejar
-from selenium import webdriver
-from scrapy.selector import Selector
+
 
 class Artist:
     def __init__(self,artist_id,artist_name,img,info):
@@ -57,7 +50,7 @@ class NetEaseSpider:
     def __init__(self,artist_id,para):
         self.para=para
         self.main_url='https://music.163.com/'
-        self.artist_url='https://music.163.com/artist/album?id={}&limit=50&offset=0'.format(artist_id)
+        self.artist_url='https://music.163.com/artist/album?id={}&limit={}&offset={}'.format(artist_id,para['limit'],para['offset'])
         self.artist_info='https://music.163.com/artist/desc?id={}'.format(artist_id)
         self.artist_id=artist_id
         # driver = webdriver.PhantomJS(executable_path='D:\\phantomjs-2.1.1-windows\\bin\\phantomjs.exe')
@@ -150,18 +143,23 @@ class NetEaseSpider:
                    'Content-Type':'application/x-www-form-urlencoded'
                    }
         response=requests.request('GET',url,stream=True,data=None,headers=None)
-        total_length=int(response.headers.get('Content-Length'))
-        with open(file_path,method)as f:
-            widgets = ['\t\tProgress: ', progressbar.Percentage(), ' ',
-                       progressbar.Bar(marker='#', left='[', right=']'),
-                       ' ', progressbar.ETA(), ' ', progressbar.FileTransferSpeed()]
-            pbar = progressbar.ProgressBar(widgets=widgets, maxval=total_length).start()
-            for chunk in response.iter_content(chunk_size=1024):
-                if chunk:
-                    f.write(chunk)
-                    f.flush()
-                pbar.update(len(chunk) + 1)
-            pbar.finish()
+        try:
+            total_length = int(response.headers.get('Content-Length'))
+            with open(file_path, method)as f:
+                widgets = ['\t\tProgress: ', progressbar.Percentage(), ' ',
+                           progressbar.Bar(marker='#', left='[', right=']'),
+                           ' ', progressbar.ETA(), ' ', progressbar.FileTransferSpeed()]
+                pbar = progressbar.ProgressBar(widgets=widgets, maxval=total_length).start()
+                for chunk in response.iter_content(chunk_size=1024):
+                    if chunk:
+                        f.write(chunk)
+                        f.flush()
+                    pbar.update(len(chunk) + 1)
+                pbar.finish()
+        except TypeError:
+            print('File Not Exits!')
+            file=open(file_path,method)
+            file.close()
 
     def download_singer_img(self):
         print('Downloading:{}\'s Image'.format(self.artist.name))
@@ -178,7 +176,11 @@ class NetEaseSpider:
         self.download_file(album.img,file,'wb')
 
     def download_song(self,album):
+        song_num=album.songs.__len__()
+        song_count=0
         for song in album.songs:
+            song_count+=1
+            print('Song:{}/{}'.format(song_count,song_num))
             try:
                 lyrics_html = self.download(song.lyric_url).decode('utf-8')
                 lyrics = re.split('":"|","', lyrics_html)[1]
@@ -200,9 +202,16 @@ class NetEaseSpider:
             except OSError:
                 pass
 
-            lyrics_file = open(
-                'G:\\Spring_Semester_2018\\J2EE实训\\数据\\音乐数据库\\lyrics\\{ARTIST_NAME}\\{ALBUM_NAME}\\{SONG_NAME}.lrc'.format(
-                    ARTIST_NAME=self.artist.name, ALBUM_NAME=album.name, SONG_NAME=song.name), 'w',encoding='utf-8')
+            try:
+                lyrics_file = open(
+                    'G:\\Spring_Semester_2018\\J2EE实训\\数据\\音乐数据库\\lyrics\\{ARTIST_NAME}\\{ALBUM_NAME}\\{SONG_NAME}.lrc'.format(
+                        ARTIST_NAME=self.artist.name, ALBUM_NAME=album.name, SONG_NAME=song.name), 'w',
+                    encoding='utf-8')
+            except FileNotFoundError:
+                lyrics_file = open(
+                    'G:\\Spring_Semester_2018\\J2EE实训\\数据\\音乐数据库\\lyrics\\{ARTIST_NAME}\\{ALBUM_NAME}\\{SONG_NAME}.lrc'.format(
+                        ARTIST_NAME=self.artist.name, ALBUM_NAME=album.name, SONG_NAME='InvalidFileName'), 'w',
+                    encoding='utf-8')
             lyrics_file.write(lyrics)
             lyrics_file.close()
             print('\tLyric File:{} Saved'.format(song.name))
@@ -221,8 +230,20 @@ class NetEaseSpider:
                         ARTIST_NAME=self.artist.name, ALBUM_NAME=album.name))
             except OSError:
                 pass
-            song_file = 'G:\\Spring_Semester_2018\\J2EE实训\\数据\\音乐数据库\\music\\{ARTIST_NAME}\\{ALBUM_NAME}\\{SONG_NAME}.mp3'.format(
-                    ARTIST_NAME=self.artist.name, ALBUM_NAME=album.name, SONG_NAME=song.name)
+
+
+            try:
+                song_file = open(
+                    'G:\\Spring_Semester_2018\\J2EE实训\\数据\\音乐数据库\\music\\{ARTIST_NAME}\\{ALBUM_NAME}\\{SONG_NAME}.mp3'.format(
+                        ARTIST_NAME=self.artist.name, ALBUM_NAME=album.name, SONG_NAME=song.name), 'w',
+                    encoding='utf-8')
+                song_file.close()
+                song_file='G:\\Spring_Semester_2018\\J2EE实训\\数据\\音乐数据库\\music\\{ARTIST_NAME}\\{ALBUM_NAME}\\{SONG_NAME}.mp3'.format(
+                        ARTIST_NAME=self.artist.name, ALBUM_NAME=album.name, SONG_NAME=song.name)
+            except FileNotFoundError:
+                song_file='G:\\Spring_Semester_2018\\J2EE实训\\数据\\音乐数据库\\music\\{ARTIST_NAME}\\{ALBUM_NAME}\\{SONG_NAME}.mp3'.format(
+                        ARTIST_NAME=self.artist.name, ALBUM_NAME=album.name, SONG_NAME="InvalidFilename")
+
             self.download_file(song.song_url,song_file,'wb')
             print('\tSong File:{} Saved'.format(song.name))
 
@@ -284,11 +305,14 @@ if __name__ == '__main__':
         'country':'日本',
         'occupation':'歌手',
         'style':1,
-        'language':'日语'
+        'language':'日语',
+        'limit':50,
+        'offset':0
     }
     Spy = NetEaseSpider('17477',para=artist_para)
 
     Spy.parse_artist_html()
+    album_num=Spy.artist.albums.__len__()
     SQL_file = open('G:\\Spring_Semester_2018\\J2EE实训\\数据\\音乐数据库\\data\\insert_{}.sql'.format(Spy.artist.name), 'w',encoding='utf-8')
     localtime = time.asctime(time.localtime(time.time()))
     SQL_file.write('# {}'.format(localtime))
@@ -297,10 +321,15 @@ if __name__ == '__main__':
 
     SQL_file.write(Spy.SQL_artist())
     Spy.download_singer_img()
+    album_count=0
     for album in Spy.artist.albums:
+        album_count+=1
         Spy.download_album_img(album)
         SQL_file.write(Spy.SQL_album(album))
+        SQL_file.write('\n')
         Spy.parse_album_html(album)
+        print('Album:{}/{}'.format(album_count,album_num))
         for song in album.songs:
             SQL_file.write(Spy.SQL_song(album,song))
+            SQL_file.write('\n')
         Spy.download_song(album)
