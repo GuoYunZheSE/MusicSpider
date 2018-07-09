@@ -7,6 +7,7 @@ import requests
 import os
 import time
 import json
+import random
 
 def check(name):
     if '/' in name:
@@ -28,6 +29,17 @@ def check(name):
     if '\"' in name:
         name =name.replace('\"', '_')
     return name
+
+def get_ip_list(obj):
+    ip_text = obj.findAll('tr', {'class': 'odd'})   # 获取带有IP地址的表格的所有行
+    ip_list = []
+    for i in range(len(ip_text)):
+        ip_tag = ip_text[i].findAll('td')
+        ip_port = ip_tag[1].get_text() + ':' + ip_tag[2].get_text() # 提取出IP地址和端口号
+        ip_list.append(ip_port)
+    print("共收集到了{}个代理IP".format(len(ip_list)))
+    print(ip_list)
+    return ip_list
 
 class Artist:
     def __init__(self,artist_id,artist_name,img,info):
@@ -74,6 +86,7 @@ class NetEaseSpider:
         self.artist_url='https://music.163.com/artist/album?id={}&limit={}&offset={}'.format(para['id'],para['limit'],para['offset'])
         self.artist_info='https://music.163.com/artist/desc?id={}'.format(para['id'])
         self.artist_id=para['id']
+        self.ip_list=[]
         # driver = webdriver.PhantomJS(executable_path='D:\\phantomjs-2.1.1-windows\\bin\\phantomjs.exe')
         #         # driver.implicitly_wait(1)
         # self.cookie=driver.get_cookies()
@@ -95,9 +108,12 @@ class NetEaseSpider:
         # opener=urllib.request.build_opener(cookie_support)
         # urllib.request.install_opener(opener)
 
+        proxy=self.get_random_ip()
+        httpproxy_handler=urllib.request.ProxyHandler(proxy)
+        opener=urllib.request.build_opener(httpproxy_handler)
         request = urllib.request.Request(url, headers=headers)
         try:
-            html = urllib.request.urlopen(request).read()
+            html = opener.open(request).read()
         except urllib.request.URLError as e:
             print('Download error:', e.reason)
             html = None
@@ -109,6 +125,15 @@ class NetEaseSpider:
     def get_bs(self,url):
         html=self.download(url).decode('utf-8')
         self.bs=bs4.BeautifulSoup(html,'lxml')
+
+    def parse_ip_web(self):
+        url = 'http://www.xicidaili.com/'
+        headers = {
+            'User-Agent': 'User-Agent:Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/62.0.3202.62 Safari/537.36'}
+        request = urllib.request.Request(url, headers=headers)
+        response = urllib.request.urlopen(request)
+        bsObj = bs4.BeautifulSoup(response, 'lxml')  # 解析获取到的html
+        self.ip_list=get_ip_list(bsObj)
 
     def parse_artist_html(self):
         self.get_bs(self.artist_url)
@@ -151,8 +176,8 @@ class NetEaseSpider:
         songs=self.bs.select('ul.f-hide li a')
         for song in songs:
             song_name=song.text
-            if song_name>=30:
-                song_name=song_name[0:30]
+            if song_name.__len__()>=50:
+                song_name=song_name[0:50]
             song_id=int(song['href'].split('id=')[1])
             album.add_song(Song(check(song_name),song_id))
 
@@ -168,7 +193,7 @@ class NetEaseSpider:
                    'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
                    'Content-Type':'application/x-www-form-urlencoded'
                    }
-        response=requests.request('GET',url,stream=True,data=None,headers=None)
+        response=requests.request('GET',url,stream=True,data=None,headers=headers, proxies=self.get_random_ip())
         try:
             total_length = int(response.headers.get('Content-Length'))
             with open(file_path, method)as f:
@@ -203,6 +228,12 @@ class NetEaseSpider:
             pass
         file='G:\\Spring_Semester_2018\\J2EE实训\数据\\音乐数据库\\image\\album\\{}\\{}.jpg'.format(self.artist.name,album.name)
         self.download_file(album.img,file,'wb')
+
+    def get_random_ip(self):
+        random_ip = 'http://' + random.choice(self.ip_list)
+        proxy_ip = {'http:': random_ip}
+        print('Using Proxy:{}'.format(random_ip))
+        return proxy_ip
 
     def download_song(self,album):
         song_num=album.songs.__len__()
@@ -353,10 +384,11 @@ if __name__ == '__main__':
         'style':1,
         'language':'日语',
         'limit':50,
-        'offset':0,
+        'offset':45,
         'id':17477
     }
     Spy = NetEaseSpider(para=artist_para)
+    Spy.parse_ip_web()
 
     filew = open('G:\\Spring_Semester_2018\\J2EE实训\\数据\\音乐数据库\\data\\{}.json'.format(artist_para['name']), 'w', encoding='utf-8')
     json.dump(artist_para, filew)
