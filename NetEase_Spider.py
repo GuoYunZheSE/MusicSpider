@@ -28,6 +28,9 @@ def check(name):
         name =name.replace('\'', '_')
     if '\"' in name:
         name =name.replace('\"', '_')
+
+    if '*' in name:
+            name = name.replace('*', '_')
     return name
 
 def get_ip_list(obj):
@@ -40,6 +43,42 @@ def get_ip_list(obj):
     print("共收集到了{}个代理IP".format(len(ip_list)))
     print(ip_list)
     return ip_list
+def Updat_Image():
+    artists=[['Taylor Swift',44266],['薛之谦',5781],['五月天',13193],['林俊杰',3684],['林宥嘉',3685],['周杰伦',6452],
+        ['张杰',6472],['Maroon5',96266],['EXO',759509],['田馥甄',9548],['陈奕迅',2116],['A-Lin',7063],
+        ['KARD',12214083],['WINNER',976163],['The Piano Guys',99093],['张震岳',6453],['G.E.M.邓紫棋',7763],
+        ['Michael Jackson',38853],['玉置浩二',15558],['大塚 愛',17477],['KOKIA',16686],['张信哲',6454],["The Beatles",101988],['梁静茹',8325],
+        ['赵雷',6731],['王菲',9621],['Justin Timberlake',35331],['Wolfgang Amadeus Mozart',804174],['Alan Walker',1045123],
+        ['Two Steps From Hell',102714],['萧敬腾',5768],['萧亚轩',9945],['徐良',5929],
+        ['汪苏泷',5538],['许嵩',5771]]
+    for artist in artists:
+        artist_para = {
+            'name': artist[0],
+            'gender': 2,
+            'birthplace': '法国',
+            'birthday': '1972-05-03',
+            'representative': 'Green Days',
+            'region': 4,
+            'initial': 'C',
+            'country': '日本',
+            'occupation': '歌手',
+            'style': 1,
+            'language': '英法日',
+            'limit': 90,
+            'offset': 0,
+            'id': artist[1]
+         }
+        Spy=NetEaseSpider(artist_para)
+        Spy.parse_ip_web()
+        Spy.parse_artist_html()
+        album_num = Spy.artist.albums.__len__()
+        Spy.download_singer_img()
+        album_count = 0
+        for album in Spy.artist.albums:
+            print('Album:{}/{}'.format(album_count, album_num))
+            album_count += 1
+            Spy.download_album_img(album)
+
 
 class Artist:
     def __init__(self,artist_id,artist_name,img,info):
@@ -138,6 +177,7 @@ class NetEaseSpider:
     def parse_artist_html(self):
         self.get_bs(self.artist_url)
         artist_img=self.bs.select('div.n-artist img')[0]['src']
+        artist_img=artist_img.replace('640y300','400y400')
         artist_name=self.bs.select('h2')[0].text
 
         imgs=self.bs.select('ul#m-song-module li div img')
@@ -153,6 +193,7 @@ class NetEaseSpider:
 
         for i in range(0,imgs.__len__()):
             img=imgs[i]['src']
+            img=img.replace('120y120','400y400')
             a_id=int(a_ids[i]['href'].split('id=')[1])
             name=names[i]['title']
             self.artist.albums.append(Album(check(name), a_id, img))
@@ -232,7 +273,7 @@ class NetEaseSpider:
     def get_random_ip(self):
         random_ip = 'http://' + random.choice(self.ip_list)
         proxy_ip = {'http:': random_ip}
-        print('Using Proxy:{}'.format(random_ip))
+        print('\tUsing Proxy:{}'.format(random_ip))
         return proxy_ip
 
     def download_song(self,album):
@@ -291,7 +332,7 @@ class NetEaseSpider:
                     encoding='utf-8')
             lyrics_file.write(lyrics)
             lyrics_file.close()
-            print('\tLyric File:{} Saved'.format(song.name))
+            print('\t\tLyric File:{} Saved'.format(song.name))
 
             # Get File
             time.sleep(1)
@@ -322,7 +363,7 @@ class NetEaseSpider:
                         ARTIST_NAME=self.artist.name, ALBUM_NAME=album.name, SONG_NAME="InvalidFilename")
 
             self.download_file(song.song_url,song_file,'wb')
-            print('\tSong File:{} Saved'.format(song.name))
+            print('\t\tSong File:{} Saved'.format(song.name))
 
     def SQL_artist(self):
         Command = "INSERT INTO artist (name, gender, birthplace, occupation, birthday, representative, region, initial, play_count, image, intro, country)" \
@@ -370,51 +411,55 @@ class NetEaseSpider:
         )
         return Command
 
+
+
 if __name__ == '__main__':
-    artist_para={
-        'name':'おおつか あい',
-        'gender':2,
-        'birthplace':'日本大阪市',
-        'birthday':'1982-9-9',
-        'representative':'星象仪',
-        'region':4,
-        'initial':'D',
-        'country':'日本',
-        'occupation':'歌手',
-        'style':1,
-        'language':'日语',
-        'limit':50,
-        'offset':45,
-        'id':17477
-    }
-    Spy = NetEaseSpider(para=artist_para)
-    Spy.parse_ip_web()
-
-    filew = open('G:\\Spring_Semester_2018\\J2EE实训\\数据\\音乐数据库\\data\\{}.json'.format(artist_para['name']), 'w', encoding='utf-8')
-    json.dump(artist_para, filew)
-    filew.close()
-
-
-    Spy.parse_artist_html()
-    album_num=Spy.artist.albums.__len__()
-    SQL_file = open('G:\\Spring_Semester_2018\\J2EE实训\\数据\\音乐数据库\\data\\insert_{}.sql'.format(Spy.artist.name), 'w',encoding='utf-8')
-    localtime = time.asctime(time.localtime(time.time()))
-    SQL_file.write('# {}'.format(localtime))
-    SQL_file.write('\n')
-
-
-    SQL_file.write(Spy.SQL_artist())
-    SQL_file.write('\n')
-    Spy.download_singer_img()
-    album_count=0
-    for album in Spy.artist.albums:
-        album_count+=1
-        Spy.download_album_img(album)
-        Spy.parse_album_html(album)
-        SQL_file.write(Spy.SQL_album(album))
-        SQL_file.write('\n')
-        print('Album:{}/{}'.format(album_count,album_num))
-        for song in album.songs:
-            SQL_file.write(Spy.SQL_song(album,song))
-            SQL_file.write('\n')
-        Spy.download_song(album)
+    # artist_para={
+    #     'name':'Clémentine',
+    #     'gender':2,
+    #     'birthplace':'法国',
+    #     'birthday':'1972-05-03',
+    #     'representative':'Green Days',
+    #     'region':4,
+    #     'initial':'C',
+    #     'country':'日本',
+    #     'occupation':'歌手',
+    #     'style':1,
+    #     'language':'英法日',
+    #     'limit':7,
+    #     'offset':8,
+    #     'id':159271
+    # }
+    # Spy = NetEaseSpider(para=artist_para)
+    # Spy.parse_ip_web()
+    #
+    #
+    # filew = open('G:\\Spring_Semester_2018\\J2EE实训\\数据\\音乐数据库\\data\\{}.json'.format(artist_para['name']), 'w', encoding='utf-8')
+    # json.dump(artist_para, filew)
+    # filew.close()
+    #
+    #
+    # Spy.parse_artist_html()
+    # album_num=Spy.artist.albums.__len__()
+    # SQL_file = open('G:\\Spring_Semester_2018\\J2EE实训\\数据\\音乐数据库\\data\\insert_{}.sql'.format(Spy.artist.name), 'w',encoding='utf-8')
+    # localtime = time.asctime(time.localtime(time.time()))
+    # SQL_file.write('# {}'.format(localtime))
+    # SQL_file.write('\n')
+    #
+    #
+    # SQL_file.write(Spy.SQL_artist())
+    # SQL_file.write('\n')
+    # Spy.download_singer_img()
+    # album_count=0
+    # for album in Spy.artist.albums:
+    #     album_count+=1
+    #     Spy.download_album_img(album)
+    #     Spy.parse_album_html(album)
+    #     SQL_file.write(Spy.SQL_album(album))
+    #     SQL_file.write('\n')
+    #     print('Album:{}/{}'.format(album_count,album_num))
+    #     for song in album.songs:
+    #         SQL_file.write(Spy.SQL_song(album,song))
+    #         SQL_file.write('\n')
+    #     Spy.download_song(album)
+    Updat_Image()
